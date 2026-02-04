@@ -1,0 +1,10 @@
+django>=5.0
+djangorestframework
+psycopg2-binary
+django-cors-headers
+gunicorn
+python-dotenv
+djangorestframework-simplejwt
+django-filter
+drf-yasg
+dj-database-url
