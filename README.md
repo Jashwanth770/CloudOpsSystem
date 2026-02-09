@@ -114,7 +114,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 ## 📞 Support
-For support, email support@cloudops.com or join our Slack channel.
+For support, email jashwanthsai8630@gmail.com.
 
 ---
 
