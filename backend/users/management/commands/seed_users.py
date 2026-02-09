@@ -70,22 +70,38 @@ class Command(BaseCommand):
             department = data.pop('department', None)
             designation = data.pop('designation', None)
             
-            if User.objects.filter(email=data['email']).exists():
-                self.stdout.write(f"User {data['email']} already exists")
-                continue
-
-            # Create User
+            # Create or Update User
             is_staff = data.pop('is_staff', False)
             is_superuser = data.pop('is_superuser', False)
             
-            user = User.objects.create_user(
-                username=data['email'], # Username is email for simplicity in this script, though model uses email
-                role=role,
-                **data
+            user, created = User.objects.get_or_create(
+                email=data['email'],
+                defaults={
+                    'username': data['email'],
+                    'role': role,
+                    'two_factor_auth_type': 'NONE',
+                    'is_staff': is_staff,
+                    'is_superuser': is_superuser,
+                    **data
+                }
             )
-            user.is_staff = is_staff
-            user.is_superuser = is_superuser
-            user.save()
+
+            if not created:
+                # Force password and role for existing demo users
+                user.set_password(data['password'])
+                user.two_factor_auth_type = 'NONE'
+                user.role = role
+                user.is_staff = is_staff
+                user.is_superuser = is_superuser
+                for key, value in data.items():
+                    setattr(user, key, value)
+                user.save()
+                self.stdout.write(f"Updated User: {user.email}")
+            else:
+                user.set_password(data['password']) # create_user handles hashing but get_or_create doesn't. 
+                # Actually create_user is safer.
+                user.save()
+                self.stdout.write(self.style.SUCCESS(f"Created {role}: {user.email}"))
 
             # Create Employee Profile if not admin
             if role != 'ADMIN':
