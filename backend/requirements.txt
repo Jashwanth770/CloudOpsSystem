@@ -270,7 +270,7 @@ QtPy==2.4.1
 ratelim==0.1.6
 razorpay==1.4.2
 readchar==4.2.1
-redis==4.0.2
+redis>=4.6.0
 referencing==0.33.0
 regex==2024.11.6
 requests==2.32.4
