@@ -9,7 +9,7 @@ psycopg2-binary==2.9.10
 dj-database-url==3.1.0
 # Authentication & Security
 django-otp==1.5.4
-django-otp-totp==1.0.0
+
 qrcode==8.0
 django-csp==3.8
 djangorestframework-simplejwt==5.3.1
