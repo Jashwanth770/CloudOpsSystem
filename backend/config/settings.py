@@ -140,6 +140,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 SESSION_SAVE_EVERY_REQUEST = False # Reset timer on activity (Optional)
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Build trigger: remove encrypted_model_fields completely
 
 # Custom User Model
 AUTH_USER_MODEL = 'users.User'
