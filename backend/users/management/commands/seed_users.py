@@ -103,15 +103,17 @@ class Command(BaseCommand):
                 user.save()
                 self.stdout.write(self.style.SUCCESS(f"Created {role}: {user.email}"))
 
-            # Create Employee Profile if not admin
+            # Create or Update Employee Profile if not admin
             if role != 'ADMIN':
-                Employee.objects.create(
+                Employee.objects.get_or_create(
                     user=user,
-                    department=department,
-                    designation=designation,
-                    joining_date=timezone.now().date(),
-                    address=f"123 {role} St",
-                    phone_number=f"555-010{random.randint(0,9)}"
+                    defaults={
+                        'department': department,
+                        'designation': designation,
+                        'joining_date': timezone.now().date(),
+                        'address': f"123 {role} St",
+                        'phone_number': f"555-010{random.randint(0,9)}"
+                    }
                 )
             
             self.stdout.write(self.style.SUCCESS(f"Created {role}: {user.email}"))
