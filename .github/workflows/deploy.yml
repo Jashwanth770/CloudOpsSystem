@@ -22,6 +22,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r backend/requirements.txt
         pip install pytest
+
+    - name: Debug Codebase (Find the Ghost)
+      run: |
+        echo "--- SEARCHING FOR FORBIDDEN IMPORT ---"
+        grep -r "encrypted_model_fields" backend || echo "Codebase is clean (Grep found nothing)"
+        echo "--- LISTING MIGRATION FILES ---"
+        find backend -name "00*.py"
+        echo "--- END DEBUG ---"
+
         
     - name: Run Tests
       # Assuming we have some tests, or just run checks
