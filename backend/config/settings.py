@@ -102,9 +102,16 @@ DATABASES = {
 
 # Production Database (Render/Heroku/Railway)
 # dj_database_url parses the DATABASE_URL env var and configures the connection
+# Production Database
 import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES['default'].update(db_from_env)
+
+if os.getenv('DATABASE_URL'):
+    try:
+        db_from_env = dj_database_url.config(conn_max_age=600)
+        DATABASES['default'].update(db_from_env)
+    except Exception as e:
+        print(f"Error configuring database: {e}")
+
 
 
 # Password validation
