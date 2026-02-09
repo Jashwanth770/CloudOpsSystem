@@ -87,7 +87,6 @@ fs==2.4.16
 fsspec==2025.7.0
 future==1.0.0
 gast==0.6.0
--e git+https://github.com/Jashwanth770/vox-pilot.git@a8071d9d29ae869e4b3d74f52d59cbd5854e1825#egg=GenAI_Project&subdirectory=Desktop/bosscoder/Multimodal-AI-Assistant-main
 geocoder==1.38.1
 geographiclib==2.1
 geopy==2.4.1
