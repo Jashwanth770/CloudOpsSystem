@@ -1,5 +1,5 @@
 # Core Django
-setuptools
+setuptools<70.0.0
 Django==5.1.7
 djangorestframework==3.15.2
 python-dotenv==1.1.0
@@ -9,7 +9,6 @@ psycopg2-binary==2.9.10
 dj-database-url==3.1.0
 # Authentication & Security
 django-otp==1.5.4
-
 qrcode==8.0
 django-csp==3.8
 djangorestframework-simplejwt==5.3.1
