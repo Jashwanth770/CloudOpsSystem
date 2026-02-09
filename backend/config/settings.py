@@ -19,7 +19,7 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 FIELD_ENCRYPTION_KEY = os.getenv('FIELD_ENCRYPTION_KEY', 'PEsxMV3425BiN5QD7ZveRTtFGvuv81YrjmTVy-4Erh4=')
 
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') + ['testserver', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',') + ['testserver', 'localhost', '127.0.0.1']
 
 # Application definition
 
