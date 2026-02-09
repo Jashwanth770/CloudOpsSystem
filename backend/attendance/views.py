@@ -10,7 +10,7 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.role in ['ADMIN', 'HR']:
+        if user.role in ['ADMIN', 'HR', 'MANAGER']:
             return Attendance.objects.all()
         if hasattr(user, 'employee_profile'):
             return Attendance.objects.filter(employee=user.employee_profile)
@@ -18,7 +18,11 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 
     @decorators.action(detail=False, methods=['post'])
     def clock_in(self, request):
-        employee = request.user.employee_profile
+        try:
+            employee = request.user.employee_profile
+        except Exception:
+            return Response({"error": "User has no Employee Profile associated."}, status=status.HTTP_400_BAD_REQUEST)
+
         today = timezone.now().date()
         
         attendance, created = Attendance.objects.get_or_create(employee=employee, date=today)
@@ -32,7 +36,11 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 
     @decorators.action(detail=False, methods=['post'])
     def clock_out(self, request):
-        employee = request.user.employee_profile
+        try:
+            employee = request.user.employee_profile
+        except Exception:
+            return Response({"error": "User has no Employee Profile associated."}, status=status.HTTP_400_BAD_REQUEST)
+            
         today = timezone.now().date()
         
         try:
@@ -46,4 +54,4 @@ class AttendanceViewSet(viewsets.ModelViewSet):
             attendance.save()
             return Response(AttendanceSerializer(attendance).data)
         except Attendance.DoesNotExist:
-            return Response({"error": "Attendance record not found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "You have not clocked in today."}, status=status.HTTP_400_BAD_REQUEST)

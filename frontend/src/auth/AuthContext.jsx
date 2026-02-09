@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import api from '../api/axios';
-import { jwtDecode } from 'jwt-decode'; // Error: jwt-decode not installed? I should check usage.
+// import { jwtDecode } from 'jwt-decode';
 
 // I didn't install jwt-decode in npm install step. I should fallback to simple parsing or install it. 
 // I'll add `npm install jwt-decode` to next step or use simple decode.
@@ -11,6 +11,7 @@ import { jwtDecode } from 'jwt-decode'; // Error: jwt-decode not installed? I sh
 // For now, I'll store user object in local storage or fetch profile.
 
 export const AuthContext = createContext();
+export const useAuth = () => React.useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
@@ -32,8 +33,11 @@ export const AuthProvider = ({ children }) => {
         checkAuth();
     }, []);
 
-    const login = async (email, password) => {
-        const response = await api.post('/auth/login/', { email, password });
+    const login = async (email, password, otp = null) => {
+        const payload = { email, password };
+        if (otp) payload.otp = otp;
+
+        const response = await api.post('/auth/login/', payload);
         const { access, refresh } = response.data;
         localStorage.setItem('access_token', access);
         localStorage.setItem('refresh_token', refresh);

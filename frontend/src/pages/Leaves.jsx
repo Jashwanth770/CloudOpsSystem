@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import api from '../api/axios';
+import { AuthContext } from '../auth/AuthContext';
 
 const Leaves = () => {
+    const { user } = useContext(AuthContext);
     const [leaves, setLeaves] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
@@ -19,11 +21,22 @@ const Leaves = () => {
     const fetchLeaves = async () => {
         try {
             const response = await api.get('/leaves/');
-            setLeaves(response.data);
+            const serviceData = response.data.results || response.data;
+            setLeaves(Array.isArray(serviceData) ? serviceData : []);
         } catch (error) {
             console.error("Failed to fetch leaves", error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleLeaveAction = async (id, action) => {
+        try {
+            await api.post(`/leaves/${id}/${action}/`);
+            fetchLeaves();
+        } catch (error) {
+            console.error(`Failed to ${action} leave`, error);
+            alert(`Failed to ${action} leave`);
         }
     };
 
@@ -36,6 +49,8 @@ const Leaves = () => {
             setFormData({ leave_type: 'SICK', start_date: '', end_date: '', reason: '' });
         } catch (error) {
             console.error("Failed to apply for leave", error);
+            // Show alert for better UX
+            alert("Failed to apply for leave. Please check your data.");
         }
     };
 
@@ -62,12 +77,31 @@ const Leaves = () => {
                                     <p className="text-sm text-gray-500 mt-1">{leave.reason}</p>
                                 </div>
                                 <div>
-                                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                    ${leave.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
-                                            leave.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
-                                                'bg-yellow-100 text-yellow-800'}`}>
-                                        {leave.status}
-                                    </span>
+                                    <div className="flex flex-col items-end gap-2">
+                                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        ${leave.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
+                                                leave.status === 'REJECTED' ? 'bg-red-100 text-red-800' :
+                                                    'bg-yellow-100 text-yellow-800'}`}>
+                                            {leave.status}
+                                        </span>
+                                        {/* Managers and HR/Admin can approve/reject pending leaves */}
+                                        {['ADMIN', 'HR', 'MANAGER'].includes(user?.role) && leave.status === 'PENDING' && (
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => handleLeaveAction(leave.id, 'approve')}
+                                                    className="bg-green-600 text-white px-2 py-1 rounded text-xs hover:bg-green-700"
+                                                >
+                                                    Approve
+                                                </button>
+                                                <button
+                                                    onClick={() => handleLeaveAction(leave.id, 'reject')}
+                                                    className="bg-red-600 text-white px-2 py-1 rounded text-xs hover:bg-red-700"
+                                                >
+                                                    Reject
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </li>
