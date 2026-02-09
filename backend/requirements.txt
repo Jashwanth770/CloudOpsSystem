@@ -8,10 +8,7 @@ django-cors-headers==4.7.0
 psycopg2-binary==2.9.10
 dj-database-url==3.1.0
 # Authentication & Security
-django-otp==1.5.4
-qrcode==8.0
-django-fernet-fields==0.6
-django-encrypted-model-fields==0.6.5
+
 django-csp==3.8
 djangorestframework-simplejwt==5.3.1
 drf-yasg==1.21.7

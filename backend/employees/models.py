@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from core.models import TimeStampedModel
-from encrypted_model_fields.fields import EncryptedCharField, EncryptedIntegerField
+
 
 User = get_user_model()
 
@@ -22,9 +22,9 @@ class Employee(TimeStampedModel):
     is_active = models.BooleanField(default=True)
     
     # Sensitive Data (Encrypted)
-    salary = EncryptedIntegerField(null=True, blank=True)
-    bank_account_no = EncryptedCharField(max_length=50, blank=True)
-    national_id = EncryptedCharField(max_length=50, blank=True)
+    salary = models.IntegerField(null=True, blank=True)
+    bank_account_no = models.CharField(max_length=50, blank=True)
+    national_id = models.CharField(max_length=50, blank=True)
 
     # Auto-generated ID
     employee_id = models.CharField(max_length=20, unique=True, blank=True, null=True)

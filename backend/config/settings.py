@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     # Third party
     'django_otp',
     'django_otp.plugins.otp_totp',
-    'encrypted_model_fields',
+
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
