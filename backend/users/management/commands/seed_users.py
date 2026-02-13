@@ -20,8 +20,8 @@ class Command(BaseCommand):
         users_data = [
             {
                 'email': 'jashwanthsai8630@gmail.com',
-                'password': 'password123',
-                'role': 'ADMIN',
+                'password': 'admin123',
+                'role': 'SYSTEM_ADMIN',
                 'first_name': 'Super',
                 'last_name': 'Admin',
                 'is_staff': True,
@@ -30,7 +30,7 @@ class Command(BaseCommand):
             {
                 'email': 'hr@example.com',
                 'password': 'password123',
-                'role': 'HR',
+                'role': 'HR_MANAGER',
                 'first_name': 'Helen',
                 'last_name': 'Richards',
                 'department': hr_dept,
@@ -48,7 +48,7 @@ class Command(BaseCommand):
             {
                 'email': 'employee@example.com',
                 'password': 'password123',
-                'role': 'EMPLOYEE',
+                'role': 'SOFTWARE_ENGINEER',
                 'first_name': 'John',
                 'last_name': 'Doe',
                 'department': it_dept,
@@ -57,7 +57,7 @@ class Command(BaseCommand):
              {
                 'email': 'bob@example.com',
                 'password': 'password123',
-                'role': 'EMPLOYEE',
+                'role': 'OPERATIONS_EXEC',
                 'first_name': 'Bob',
                 'last_name': 'Smith',
                 'department': ops_dept,
