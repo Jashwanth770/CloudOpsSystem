@@ -106,7 +106,7 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.SUCCESS(f"Created {role}: {user.email}"))
 
             # Create or Update Employee Profile if not admin
-            if role != 'ADMIN':
+            if role not in ['ADMIN', 'SYSTEM_ADMIN']:
                 Employee.objects.get_or_create(
                     user=user,
                     defaults={
