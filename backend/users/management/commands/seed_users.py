@@ -25,7 +25,9 @@ class Command(BaseCommand):
                 'first_name': 'Super',
                 'last_name': 'Admin',
                 'is_staff': True,
-                'is_superuser': True
+                'is_superuser': True,
+                'department': it_dept,
+                'designation': 'System Administrator'
             },
             {
                 'email': 'hr@example.com',
