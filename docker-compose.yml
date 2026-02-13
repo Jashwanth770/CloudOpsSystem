@@ -12,6 +12,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
+      - SECRET_KEY=django-insecure-docker-override-key
       - DB_NAME=cloudops_db
       - DB_USER=postgres
       - DB_PASSWORD=postgres
