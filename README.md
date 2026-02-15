@@ -67,7 +67,7 @@ CloudOps is a comprehensive, secure, and scalable web application designed to st
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/CloudOpsSystem.git
+git clone https://github.com/Jashwanth770/CloudOpsSystem.git
 cd CloudOpsSystem
 ```
 
