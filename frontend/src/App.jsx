@@ -11,6 +11,7 @@ import Dashboard from './pages/Dashboard';
 import Analytics from './pages/Analytics';
 import Meetings from './pages/Meetings';
 import MeetingRoom from './pages/MeetingRoom';
+import MeetingDetails from './pages/MeetingDetails';
 import Documents from './pages/Documents';
 import Messages from './pages/Messages';
 import AuditLogs from './pages/admin/AuditLogs';
@@ -98,6 +99,13 @@ function App() {
                 </DashboardLayout>
               </ProtectedRoute>
             } />
+            <Route path="/meetings/:meetingId" element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <MeetingDetails />
+                </DashboardLayout>
+              </ProtectedRoute>
+            } />
             <Route path="/meet/:roomId" element={<MeetingRoom />} />
             <Route path="/documents" element={
               <ProtectedRoute>
@@ -137,8 +145,8 @@ function App() {
             } />
           </Routes>
         </NotificationProvider>
-      </AuthProvider>
-    </Router>
+      </AuthProvider >
+    </Router >
   );
 }
 

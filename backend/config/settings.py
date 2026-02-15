@@ -18,6 +18,8 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 # Example generation: base64.urlsafe_b64encode(os.urandom(32))
 FIELD_ENCRYPTION_KEY = os.getenv('FIELD_ENCRYPTION_KEY', 'PEsxMV3425BiN5QD7ZveRTtFGvuv81YrjmTVy-4Erh4=')
 
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',') + ['testserver', 'localhost', '127.0.0.1']
 

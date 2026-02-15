@@ -90,6 +90,12 @@ const Meetings = () => {
                                 </div>
                             </div>
                             <div className="flex items-center gap-3">
+                                <Link
+                                    to={`/meetings/${meeting.id}`}
+                                    className="px-3 py-1 text-sm bg-gray-100 text-indigo-600 rounded-md hover:bg-gray-200 transition-colors"
+                                >
+                                    AI Insights
+                                </Link>
                                 {meeting.is_active ? (
                                     <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-bold animate-pulse">
                                         LIVE

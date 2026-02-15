@@ -10,7 +10,13 @@ class AttendanceViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        if user.role in ['ADMIN', 'HR', 'MANAGER']:
+        # Extended list of roles that can view all attendance
+        privileged_roles = [
+            'SYSTEM_ADMIN', 'OFFICE_ADMIN',
+            'HR_MANAGER', 'HR_EXEC',
+            'MANAGER', 'TEAM_LEAD', 'PROJECT_MANAGER', 'DEPT_HEAD'
+        ]
+        if user.role in privileged_roles:
             return Attendance.objects.all()
         if hasattr(user, 'employee_profile'):
             return Attendance.objects.filter(employee=user.employee_profile)

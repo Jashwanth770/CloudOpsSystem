@@ -19,3 +19,32 @@ class Meeting(models.Model):
 
     def __str__(self):
         return f"{self.title} ({self.room_id})"
+
+class Recording(models.Model):
+    meeting = models.OneToOneField(Meeting, on_delete=models.CASCADE, related_name='recording')
+    file = models.FileField(upload_to='recordings/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    processed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Recording for {self.meeting.title}"
+
+class Transcript(models.Model):
+    recording = models.OneToOneField(Recording, on_delete=models.CASCADE, related_name='transcript')
+    content = models.TextField()
+    summary = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Transcript for {self.recording.meeting.title}"
+
+class ActionItem(models.Model):
+    transcript = models.ForeignKey(Transcript, on_delete=models.CASCADE, related_name='action_items')
+    description = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    # Optional: Link to a system Task if converted
+    task = models.OneToOneField('tasks.Task', on_delete=models.SET_NULL, null=True, blank=True, related_name='origin_action_item')
+
+    def __str__(self):
+        return self.description
+

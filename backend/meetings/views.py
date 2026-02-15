@@ -1,8 +1,14 @@
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, generics
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from .models import Meeting
-from .serializers import MeetingSerializer
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
+from django.shortcuts import get_object_or_404
+from .models import Meeting, Recording, Transcript, ActionItem
+from .serializers import MeetingSerializer, RecordingSerializer, ActionItemSerializer
+from .ai_utils import transcribe_audio, analyze_meeting
+from tasks.models import Task
+import os
 
 class MeetingViewSet(viewsets.ModelViewSet):
     queryset = Meeting.objects.all()
@@ -57,3 +63,90 @@ class MeetingViewSet(viewsets.ModelViewSet):
         meeting.is_active = False
         meeting.save()
         return Response({"detail": "Meeting ended successfully."})
+
+class RecordingUploadView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
+    def post(self, request, meeting_id):
+        meeting = get_object_or_404(Meeting, id=meeting_id)
+        if 'file' not in request.data:
+            return Response({"error": "No file provided"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        recording, created = Recording.objects.get_or_create(meeting=meeting)
+        recording.file = request.data['file']
+        recording.save()
+        
+        serializer = RecordingSerializer(recording)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class ProcessMeetingView(APIView):
+    def post(self, request, meeting_id):
+        meeting = get_object_or_404(Meeting, id=meeting_id)
+        
+        try:
+            recording = meeting.recording
+        except Recording.DoesNotExist:
+            return Response({"error": "No recording found for this meeting"}, status=status.HTTP_404_NOT_FOUND)
+            
+        if not recording.file:
+            return Response({"error": "Recording file is missing"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        # 1. Transcribe
+        transcript_text = transcribe_audio(recording.file.path)
+        if not transcript_text:
+             return Response({"error": "Transcription failed"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+             
+        # 2. Save Transcript
+        transcript, _ = Transcript.objects.get_or_create(recording=recording)
+        transcript.content = transcript_text
+        transcript.save()
+        
+        # 3. Analyze
+        analysis = analyze_meeting(transcript_text)
+        if analysis:
+            transcript.summary = analysis.get('summary', '')
+            transcript.save()
+            
+            # 4. Save Action Items
+            for item in analysis.get('action_items', []):
+                ActionItem.objects.create(transcript=transcript, description=item)
+                
+        recording.processed = True
+        recording.save()
+        
+        return Response({"message": "Meeting processed successfully"}, status=status.HTTP_200_OK)
+
+class ConvertActionItemToTaskView(APIView):
+    def post(self, request, action_item_id):
+        action_item = get_object_or_404(ActionItem, id=action_item_id)
+        
+        if action_item.task:
+            return Response({"error": "Action item already converted to task"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        data = request.data
+        assigned_to_id = data.get('assigned_to')
+        
+        if not assigned_to_id:
+            return Response({"error": "assigned_to is required"}, status=status.HTTP_400_BAD_REQUEST)
+            
+        if not request.user.is_authenticated:
+             return Response({"error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
+
+        from employees.models import Employee
+        assigned_to = get_object_or_404(Employee, id=assigned_to_id)
+
+        task = Task.objects.create(
+            title=f"Task from Meeting: {action_item.description[:50]}...",
+            description=action_item.description,
+            assigned_to=assigned_to,
+            assigned_by=request.user,
+            due_date=data.get('due_date'), # Expecting YYYY-MM-DD
+            priority=data.get('priority', 'MEDIUM'),
+            status='TODO'
+        )
+        
+        # Link Task to Action Item
+        action_item.task = task
+        action_item.save()
+        
+        return Response({"message": "Task created", "task_id": task.id}, status=status.HTTP_201_CREATED)

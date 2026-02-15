@@ -19,7 +19,7 @@ class Command(BaseCommand):
 
         users_data = [
             {
-                'email': 'jashwanthsai8630@gmail.com',
+                'email': 'admin@cloudops.com',
                 'password': 'admin123',
                 'role': 'SYSTEM_ADMIN',
                 'first_name': 'Super',

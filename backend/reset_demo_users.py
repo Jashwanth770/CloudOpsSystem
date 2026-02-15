@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 emails = [
-    'jashwanthsai8630@gmail.com',
+    'admin@cloudops.com',
     'hr@example.com',
     'manager@example.com',
     'employee@example.com',

@@ -63,7 +63,12 @@ const Attendance = () => {
     if (loading) return <div>Loading...</div>;
 
     const { user } = useContext(AuthContext);
-    const isManagerOrAdmin = user && ['ADMIN', 'HR', 'MANAGER'].includes(user.role);
+    const isManagerOrAdmin = user && [
+        'SYSTEM_ADMIN', 'OFFICE_ADMIN',
+        'HR_MANAGER', 'HR_EXEC',
+        'MANAGER', 'TEAM_LEAD', 'PROJECT_MANAGER', 'DEPT_HEAD',
+        'FINANCE_MANAGER', 'OPERATIONS_MANAGER', 'SALES_MANAGER', 'MARKETING_MANAGER', 'SUPPORT_MANAGER'
+    ].includes(user.role);
 
     return (
         <div className="space-y-6">
