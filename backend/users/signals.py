@@ -31,7 +31,7 @@ def create_demo_users(sender, **kwargs):
 
     users_data = [
         {
-            'email': 'jashwanthsai8630@gmail.com',
+            'email': 'admin@cloudops.com',
             'password': 'password123',
             'role': 'SYSTEM_ADMIN',
             'first_name': 'Super',

@@ -24,5 +24,5 @@ def test_login(email, password):
 
 print("--- Testing Demo Logins ---")
 test_login('hr@example.com', 'password123')
-test_login('jashwanthsai8630@gmail.com', 'password123')
+test_login('admin@cloudops.com', 'password123')
 test_login('manager@example.com', 'password123')

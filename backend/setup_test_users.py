@@ -11,7 +11,7 @@ from employees.models import Employee, Department
 
 def create_users():
     users_data = [
-        {'email': 'jashwanthsai8630@gmail.com', 'password': 'password123', 'role': User.Roles.ADMIN, 'first_name': 'Super', 'last_name': 'Admin'},
+        {'email': 'admin@cloudops.com', 'password': 'password123', 'role': User.Roles.ADMIN, 'first_name': 'Super', 'last_name': 'Admin'},
         {'email': 'hr@cloudops.com', 'password': 'password123', 'role': User.Roles.HR, 'first_name': 'Helen', 'last_name': 'Richards'},
         {'email': 'manager@cloudops.com', 'password': 'password123', 'role': User.Roles.MANAGER, 'first_name': 'Mike', 'last_name': 'Manager'},
         {'email': 'employee@cloudops.com', 'password': 'password123', 'role': User.Roles.EMPLOYEE, 'first_name': 'John', 'last_name': 'Doe'},
