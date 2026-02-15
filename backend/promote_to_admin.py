@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from employees.models import Employee
 
 User = get_user_model()
-NEW_EMAIL = 'jashwanthsai8630@gmail.com'
+NEW_EMAIL = 'admin@cloudops.com'
 OLD_ADMIN_EMAIL = 'admin@cloudops.com'
 
 try:
